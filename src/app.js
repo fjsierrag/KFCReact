@@ -1,30 +1,40 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import Auth from './components/auth/auth';
+import Home from './components/home';
+import './app.scss';
 
-import Welcome from './welcome';
-import Counter from './counter';
-import DateField from './date-field';
-import Timer from './timer';
-import Register from './register';
-
-function App(){
-  /*const el = React.createElement('h1',null,'Hello React!');
-  const container = React.createElement('div',null,el);
-  return container;
-*/
-  return(
-      <div>
-        <h1>Hello React</h1>
-        <Welcome
-          name="Francisco"
-        />
-        <Counter />
-
-        <DateField/>
-        <Timer seconds={10} name={"algo"}/>
-        <Register />
-      </div>
-  )
-
+class App extends Component {
+	state = {
+		isAuthenticated: false,
+	};
+	handleSignInSuccess = res => {
+		this.setState({ isAuthenticated: true });
+	};
+	handleSignUpSuccess = res => {
+		this.props.history.push('/auth/signin');
+	};
+	render() {
+		return (
+			<div>
+				<Switch>
+					<Route path="/" exact>
+						{this.state.isAuthenticated ? <Home /> : <Redirect to="/auth" />}
+					</Route>
+					<Route path="/auth">
+						{this.state.isAuthenticated ? (
+							<Redirect to="/" />
+						) : (
+							<Auth
+								onSignInSuccess={this.handleSignInSuccess}
+								onSignUpSuccess={this.handleSignUpSuccess}
+							/>
+						)}
+					</Route>
+				</Switch>
+			</div>
+		);
+	}
 }
 
-export default App;
+export default withRouter(App);

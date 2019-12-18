@@ -49,6 +49,10 @@ module.exports= {
           'postcss-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.(png|jpg|svg|)$/,
+        use: 'file-loader'
       }
 
     ]
@@ -67,4 +71,5 @@ module.exports= {
   devServer:{
     contentBase:'./dist'
   },
+
 };
